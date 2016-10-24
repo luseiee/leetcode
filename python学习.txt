@@ -1,0 +1,421 @@
+1.
+a = 'ABC'
+b = a
+a = 'XYZ'
+print(b)
+b= 'ABC'
+2.
+s3 = r'Hello, "Bart"'
+s4 = r'''Hello,
+Lisa!'''
+加r所有字符不转义，''’可以写多行
+3.
+ASCII、Unicode和UTF-8的关系
+4.
+Python提供了ord()函数获取字符的整数表示，Python使用Unicode编码
+5.
+>>> '中文'.encode('utf-8')
+b'\xe4\xb8\xad\xe6\x96\x87'
+6.
+b'ABC'.decode('ascii')
+'ABC'
+7.
+b代表了bytes
+8.
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+第一行注释是为了告诉Linux/OS X系统，这是一个Python可执行程序，Windows系统会忽略这个注释；
+
+第二行注释是为了告诉Python解释器，按照UTF-8编码读取源代码，否则，你在源代码中写的中文输出可能会有乱码。
+9.
+要删除list末尾的元素，用pop()方法：
+10.
+只有1个元素的tuple定义时必须加一个逗号,，来消除歧义
+11.
+要保证hash的正确性，作为key的对象就不能变。在Python中，字符串、整数等都是不可变的，因此，可以放心地作为key。而list是可变的，就不能作为key：
+12.
+对于不变对象来说，调用对象自身的任意方法，也不会改变该对象自身的内容。相反，这些方法会创建新的对象并返回
+13.
+def my_abs(x):
+    if not isinstance(x, (int, float)):
+        raise TypeError('bad operand type')
+检查函数的参数错误
+14.
+在语法上，返回一个tuple可以省略括号，而多个变量可以同时接收一个tuple，按位置赋给对应的值，所以，Python的函数返回多值其实就是返回一个tuple，但写起来更方便。
+15.
+下次调用时，默认参数的内容就变了，不再是函数定义时的[]了。
+所以，定义默认参数要牢记一点：默认参数必须指向不变对象
+16.
+我们把函数的参数改为可变参数：
+def calc(*numbers):
+可变参数允许你传入0个或任意个参数
+关键字参数允许你传入0个或任意个含参数名的参数，这些关键字参数在函数内部自动组装为一个dict
+def person(name, age, **kw):
+参数定义的顺序必须是：必选参数、默认参数、可变参数、命名关键字参数和关键字参数。
+17.
+默认情况下，dict迭代的是key。如果要迭代value，可以用for value in d.values()，如果要同时迭代key和value，可以用for k, v in d.items()。
+18.
+Python内置的enumerate函数可以把一个list变成索引-元素对，这样就可以在for循环中同时迭代索引和元素本身：
+19.
+for循环后面还可以加上if判断，这样我们就可以筛选出仅偶数的平方：
+>>> [x * x for x in range(1, 11) if x % 2 == 0]
+[4, 16, 36, 64, 100]
+还可以使用两层循环，可以生成全排列：
+>>> [m + n for m in 'ABC' for n in 'XYZ']
+['AX', 'AY', 'AZ', 'BX', 'BY', 'BZ', 'CX', 'CY', 'CZ']
+20.
+generator：
+g = (x * x for x in range(10))
+这就是定义generator的另一种方法。如果一个函数定义中包含yield关键字，那么这个函数就不再是一个普通函数，而是一个generator。
+变成generator的函数，在每次调用next()的时候执行，遇到yield语句返回，再次执行时从上次返回的yield语句处继续执行。
+21.
+生成器都是Iterator对象，但list、dict、str虽然是Iterable，却不是Iterator。
+把list、dict、str等Iterable变成Iterator可以使用iter()函数
+22.
+把函数作为参数传入，这样的函数称为高阶函数，函数式编程就是指这种高度抽象的编程范式。
+map(函数，iterable）
+返回的是iterator
+23.
+和map()类似，filter()也接收一个函数和一个序列。和map()不同的是，filter()把传入的函数依次作用于每个元素，然后根据返回值是True还是False决定保留还是丢弃该元素。
+list(map(str, [1, 2, 3, 4, 5, 6, 7, 8, 9]))
+24.
+查看python所有的modules：help("modules")
+
+单看python所有的modules中包含指定字符串的modules： help("modules yourstr")
+
+查看python中常见的topics： help("topics")
+
+查看python标准库中的module：import os.path + help("os.path")
+
+查看python内置的类型：help("list")
+
+查看python类型的成员方法：help("str.find") 
+
+查看python内置函数：help("open")
+25.
+sorted()函数也是一个高阶函数，它还可以接收一个key函数来实现自定义的排序，例如按绝对值大小排序：
+>>> sorted([36, 5, -12, 9, -21], key=abs)
+sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower, reverse=True)
+26.
+返回函数
+在这个例子中，我们在函数lazy_sum中又定义了函数sum，并且，内部函数sum可以引用外部函数lazy_sum的参数和局部变量，
+当lazy_sum返回函数sum时，相关参数和变量都保存在返回的函数中，这种称为“闭包（Closure）”的程序结构拥有极大的威力。
+27.
+函数的装饰器
+@log
+def now():
+    print('2015-3-25')
+28.
+当函数的参数个数太多，需要简化时，使用functools.partial可以创建一个新的函数，这个新函数可以固定住原函数的部分参数，从而在调用时更简单。
+29.
+任何模块（一个.py文件就是一个模块，模块放在一个package里，numpy是一个package）代码的第一个字符串都被视为模块的文档注释；
+if __name__=='__main__':
+    test()
+__name__是模块的一个特殊变量，它在被直接运行时为main，如果它是被调用的那就是其他值
+30.
+在Python中，实例的变量名如果以__开头，就变成了一个私有变量（private），只有内部可以访问，外部不能访问
+在Python中，变量名类似__xxx__的，也就是以双下划线开头，并且以双下划线结尾的，是特殊变量，特殊变量是可以直接访问的，不是private变量，所以，不能用__name__、__score__这样的变量名。
+有些时候，你会看到以一个下划线开头的实例变量名，比如_name，这样的实例变量外部是可以访问的，但是，按照约定俗成的规定，当你看到这样的变量时，意思就是，“虽然我可以被访问，但是，请把我视为私有变量，不要随意访问”。
+31.
+在继承关系中，如果一个实例的数据类型是某个子类，那它的数据类型也可以被看做是父类。
+32.
+继承
+class Dog(Animal):
+33.
+判断对象类型，使用type()函数
+要判断class的类型，可以使用isinstance()函数。
+如果要获得一个对象的所有属性和方法，可以使用dir()函数，它返回一个包含字符串的list，比如，获得一个str对象的所有属性和方法
+34.
+类似__xxx__的属性和方法在Python中都是有特殊用途的，比如__len__方法返回长度。
+'ABC'.__len__()
+35.
+我们自己写的类，如果也想用len(myObj)的话，就自己写一个__len__()方法：
+>>> class MyDog(object):
+...     def __len__(self):
+...         return 100
+...
+>>> dog = MyDog()
+>>> len(dog)
+100
+注意，这里的__len__一定要是python中特有的，自己随便搞得__length__啥的是没有用的
+36.
+getattr()、setattr()以及hasattr()，我们可以直接操作一个对象的状态。
+37.
+如果Student类本身需要绑定一个属性呢？可以直接在class中定义属性，这种属性是类属性，归Student类所有
+38.
+如果我们想要限制实例的属性怎么办？比如，只允许对Student实例添加name和age属性。
+为了达到限制的目的，Python允许在定义class的时候，定义一个特殊的__slots__变量，来限制该class实例能添加的属性：__slots__ = ('name', 'age')
+39.
+class Screen(object):
+	@property
+	def height(self):
+		return self._height
+	@height.setter
+	def height(self, value):
+		self._height = value
+	@property
+	def width(self):
+		return self._width
+	@width.setter
+	def width(self, value):
+		self._width = value
+	@property
+	def resolution(self):
+		return self.width * self.height
+通过这个方法可以把属性隐藏起来，用起来又和原来感觉差不多，instance.height等，你可以在setter中加入检查输入正误的信息
+40.
+多重继承
+class Dog(Mammal, Runnable):
+41.
+如果一个类想被用于for ... in循环，类似list或tuple那样，就必须实现一个__iter__()方法，该方法返回一个迭代对象，然后，Python的for循环就会不断调用该迭代对象的__next__()方法拿到循环的下一个值，直到遇到StopIteration错误时退出循环。
+要表现得像list那样按照下标取出元素，需要实现__getitem__()方法。
+这样就可以自己做一个类似list的类。
+__getitem__()传入的参数可能是一个int，也可能是一个切片对象slice，所以要做判断
+此外，如果把对象看成dict，__getitem__()的参数也可能是一个可以作key的object，例如str
+42.
+枚举类型定义一个class类型，然后，每个常量都是class的一个唯一实例。Python提供了Enum类来实现这个功能
+感觉没有什么卵用
+43.
+正常情况下，我们都用class Xxx...来定义类，但是，type()函数也允许我们动态创建出类来，也就是说，动态语言本身支持运行期动态创建类，这和静态语言有非常大的不同，要在静态语言运行期创建类，必须构造源代码字符串再调用编译器，或者借助一些工具生成字节码实现，本质上都是动态编译，会非常复杂。
+44.
+元类暂时有点看不懂，先留个坑
+45.
+try:
+    print('try...')
+    r = 10 / 0
+    print('result:', r)
+except ZeroDivisionError as e:
+    print('except:', e)
+finally:
+    print('finally...')
+print('END')
+Python内置的logging模块可以非常容易地记录错误信息
+46.
+assert n != 0, 'n is zero!'
+启动Python解释器时可以用-O参数来关闭assert：python3 -O abc.py
+47.
+这就是logging的好处，它允许你指定记录信息的级别，有debug，info，warning，error等几个级别
+import logging
+logging.basicConfig(level=logging.INFO)
+s = '0'
+n = int(s)
+logging.info('n = %d' % n)
+print(10 / n)
+然后所有的logging.info和logging.debug就会被输出了。用法和print差不多
+48.
+第4种方式是启动Python的调试器pdb，让程序以单步方式运行，可以随时查看运行状态。
+$ python3 -m pdb err.py
+pdb.set_trace()
+这个方法也是用pdb，但是不需要单步执行，我们只需要import pdb，然后，在可能出错的地方放一个pdb.set_trace()，就可以设置一个断点：
+49.
+使用ide来调试，例如pycharm
+50.
+为了编写单元测试，我们需要引入Python自带的unittest模块
+51.
+文档测试感觉很好用啊
+只要在文末加上这样一句:
+if __name__=='__main__':
+    import doctest
+    doctest.testmod()
+就可以执行以三个引号括起来的测试！
+doctest非常有用，不但可以用来测试，还可以直接作为示例代码。通过某些文档生成工具，就可以自动把包含doctest的注释提取出来。用户看文档的时候，同时也看到了doctest。
+52.IO
+CPU输出100M的数据只需要0.01秒，可是磁盘要接收这100M数据可能需要10秒，怎么办呢？有两种办法：
+第一种是CPU等着，也就是程序暂停执行后续代码，等100M的数据在10秒后写入磁盘，再接着往下执行，这种模式称为同步IO；
+另一种方法是CPU不等待，只是告诉磁盘，“您老慢慢写，不着急，我接着干别的事去了”，于是，后续代码可以立刻接着执行，这种模式称为异步IO。
+53.
+Python引入了with语句来自动帮我们调用close()方法：
+with open('/path/to/file', 'r') as f:
+    print(f.read())
+如果文件很小，read()一次性读取最方便；如果不能确定文件大小，反复调用read(size)比较保险；如果是配置文件，调用readlines()最方便
+for line in f.readlines():
+    print(line.strip()) # 把末尾的'\n'删掉
+54.
+环境变量
+在操作系统中定义的环境变量，全部保存在os.environ这个变量中，可以直接查看：
+要获取某个环境变量的值，可以调用os.environ.get('key')
+操作文件和目录
+比如我们要列出当前目录下的所有目录，只需要一行代码：
+>>> [x for x in os.listdir('.') if os.path.isdir(x)]
+55.
+我们把变量从内存中变成可存储或传输的过程称之为序列化，在Python中叫pickling
+反过来，把变量内容从序列化的对象重新读到内存里称之为反序列化，即unpickling
+可以把变量存到磁盘里！！！！！
+import pickle
+d = [[1,2],[2,3]]
+with open('dump.txt', 'wb') as f:
+	pickle.dump(d,f)
+with open('dump.txt', 'rb') as f:
+	p = pickle.load(f)
+print (p)
+json模块可以把需要的变量转成str并存储，如果需要存的是复杂的如class时，可以先从class.__dict__获得dict类型然后再转换
+56.
+Unix/Linux操作系统提供了一个fork()系统调用，它非常特殊。普通的函数调用，调用一次，返回一次，但是fork()调用一次，返回两次，因为操作系统自动把当前进程（称为父进程）复制了一份（称为子进程），然后，分别在父进程和子进程内返回。
+multiprocessing模块提供了一个Process类来代表一个进程对象，下面的例子演示了启动一个子进程并等待其结束：
+
+from multiprocessing import Process
+import os
+# 子进程要执行的代码
+def run_proc(name):
+    print('Run child process %s (%s)...' % (name, os.getpid()))
+if __name__=='__main__':
+    print('Parent process %s.' % os.getpid())
+    p = Process(target=run_proc, args=('test',))
+    print('Child process will start.')
+    p.start()
+    p.join()
+    print('Child process end.')
+os.getpid可以得到当前进程的代号，getppid可以得到父进程的代号
+57.
+如果要启动大量的子进程，可以用进程池的方式批量创建子进程：
+from multiprocessing import Pool
+subprocess模块可以让我们非常方便地启动一个子进程，然后控制其输入和输出。
+Process之间肯定是需要通信的，操作系统提供了很多机制来实现进程间的通信。Python的multiprocessing模块包装了底层的机制，提供了Queue、Pipes等多种方式来交换数据。
+58.
+Python的标准库提供了两个模块：_thread和threading，_thread是低级模块，threading是高级模块，对_thread进行了封装。绝大多数情况下，我们只需要使用threading这个高级模块。
+启动一个线程就是把一个函数传入并创建Thread实例，然后调用start()开始执行：
+59.
+多线程和多进程最大的不同在于，多进程中，同一个变量，各自有一份拷贝存在于每个进程中，互不影响，而多线程中，所有变量都由所有线程共享，所以，任何一个变量都可以被任何一个线程修改，因此，线程之间共享数据最大的危险在于多个线程同时改一个变量，把内容给改乱了。
+如果我们要确保balance计算正确，就要给change_it()上一把锁，当某个线程开始执行change_it()时，我们说，该线程因为获得了锁，因此其他线程不能同时执行change_it()，只能等待，直到锁被释放后，获得该锁以后才能改。由于锁只有一个，无论多少线程，同一时刻最多只有一个线程持有该锁，所以，不会造成修改的冲突。创建一个锁就是通过threading.Lock()来实现。
+Python解释器由于设计时有GIL全局锁，导致了多线程无法利用多核。多线程的并发在Python中就是一个美丽的梦。
+60.
+一个ThreadLocal变量虽然是全局变量，但每个线程都只能读写自己线程的独立副本，互不干扰。ThreadLocal解决了参数在一个线程中各个函数之间互相传递的问题。
+61.
+IO密集型任务执行期间，99%的时间都花在IO上，花在CPU上的时间很少，因此，用运行速度极快的C语言替换用Python这样运行速度极低的脚本语言，完全无法提升运行效率。对于IO密集型任务，最合适的语言就是开发效率最高（代码量最少）的语言，脚本语言是首选，C语言最差。
+现代操作系统对IO操作已经做了巨大的改进，最大的特点就是支持异步IO。
+62.
+Python的multiprocessing模块不但支持多进程，其中managers子模块还支持把多进程分布到多台机器上
+63.
+正则表达式
+\d可以匹配一个数字，\w可以匹配一个字母或数字
+.可以匹配任意字符
+用*表示任意个字符（包括0个），用+表示至少一个字符，用?表示0个或1个字符，用{n}表示n个字符，用{n,m}表示n-m个字符
+\s可以匹配一个空格（也包括Tab等空白符）
+要做更精确地匹配，可以用[]表示范围
+[0-9a-zA-Z\_]可以匹配一个数字、字母或者下划线
+A|B可以匹配A或B
+^表示行的开头，^\d表示必须以数字开头。
+$表示行的结束，\d$表示必须以数字结束
+64.
+用正则表达式切分字符串比用固定的字符更灵活
+re.split(r'[\s\,]+', 'a,b, c  d')
+65.
+用()表示的就是要提取的分组（Group）
+m = re.match(r'^(\d{3})-(\d{3,8})$', '010-12345')
+>>> m.group(0)
+'010-12345'
+>>> m.group(1)
+'010'
+>>> m.group(2)
+'12345'
+group(0)永远是原始字符串，group(1)、group(2)……表示第1、2、……个子串。
+正则匹配默认是贪婪匹配，也就是匹配尽可能多的字符。加个?就可以让\d+采用非贪婪匹配。
+66.
+如果一个正则表达式要重复使用几千次，出于效率的考虑，我们可以预编译该正则表达式，接下来重复使用时就不需要编译这个步骤了，直接匹配：
+re_telephone = re.compile(r'^(\d{3})-(\d{3,8})$')
+re_telephone.match('010-12345').groups()
+67.
+在计算机中，时间实际上是用数字表示的。我们把1970年1月1日 00:00:00 UTC+00:00时区的时刻称为epoch time，记为0（1970年以前的时间timestamp为负数），当前时间就是相对于epoch time的秒数，称为timestamp。
+datetime是Python处理日期和时间的标准库。
+68.
+collections是Python内建的一个集合模块，提供了许多有用的集合类。
+namedtuple是一个函数，它用来创建一个自定义的tuple对象，并且规定了tuple元素的个数，并可以用属性而不是索引来引用tuple的某个元素。
+这样一来，我们用namedtuple可以很方便地定义一种数据类型，它具备tuple的不变性，又可以根据属性来引用，使用十分方便。
+deque是为了高效实现插入和删除操作的双向列表，适合用于队列和栈。
+使用dict时，如果引用的Key不存在，就会抛出KeyError。如果希望key不存在时，返回一个默认值，就可以用defaultdict。
+如果要保持Key的顺序，可以用OrderedDict。
+Counter是一个简单的计数器，例如，统计字符出现的个数。
+69.
+Base64是一种任意二进制到文本字符串的编码方法，常用于在URL、Cookie、网页中传输少量二进制数据。
+70.
+Python提供了一个struct模块来解决bytes和其他二进制数据类型的转换。
+编写一个bmpinfo.py，可以检查任意文件是否是位图文件，如果是，打印出图片大小和颜色数。
+71.
+Python的hashlib提供了常见的摘要算法，如MD5，SHA1等等。
+摘要算法又称哈希算法、散列算法。它通过一个函数，把任意长度的数据转换为一个长度固定的数据串（通常用16进制的字符串表示）。
+可见，摘要算法就是通过摘要函数f()对任意长度的数据data计算出固定长度的摘要digest，目的是为了发现原始数据是否被人篡改过。
+正确的保存口令的方式是不存储用户的明文口令，而是存储用户口令的摘要，比如MD5。
+72.
+Python的内建模块itertools提供了非常有用的用于操作迭代对象的函数。
+count()会创建一个无限的迭代器，所以上述代码会打印出自然数序列。
+cycle()会把传入的一个序列无限重复下去。
+repeat()负责把一个元素无限重复下去，不过如果提供第二个参数就可以限定重复次数。
+73.
+什么是 XML?
+XML 指可扩展标记语言（EXtensible Markup Language）
+XML 是一种标记语言，很类似 HTML
+XML 的设计宗旨是传输数据，而非显示数据
+XML 标签没有被预定义。您需要自行定义标签。
+XML 被设计为具有自我描述性。
+在Python中使用SAX解析XML非常简洁，通常我们关心的事件是start_element，end_element和char_data，准备好这3个函数，然后就可以解析xml了。
+74.
+Python提供了HTMLParser来非常方便地解析HTML，只需简单几行代码
+这里几个练习不错，有空可以试着做一下
+75.
+urllib提供了一系列用于操作URL的功能。
+get post handler
+这里也先挖个坑，之后web学习的时候再补上
+76.
+PIL：Python Imaging Library，已经是Python平台事实上的图像处理标准库了。PIL功能非常强大，但API却非常简单易用。
+77.
+virtualenv为应用提供了隔离的Python运行环境，解决了不同应用间多版本的冲突问题。
+78.
+我们编写的Python代码会调用内置的Tkinter，Tkinter封装了访问Tk的接口；
+Tk是一个图形库，支持多个操作系统，使用Tcl语言开发；
+Tk会调用操作系统提供的本地GUI接口，完成最终的GUI。
+79.
+IP协议负责把数据从一台计算机通过网络发送到另一台计算机。数据被分割成一小块一小块，然后通过IP包发送出去。由于互联网链路复杂，两台计算机之间经常有多条线路，因此，路由器就负责决定如何把一个IP包转发出去。IP包的特点是按块发送，途径多个路由，但不保证能到达，也不保证顺序到达。
+TCP协议则是建立在IP协议之上的。TCP协议负责在两台计算机之间建立可靠连接，保证数据包按顺序到达。TCP协议会通过握手建立连接，然后，对每个IP包编号，确保对方按顺序收到，如果包丢掉了，就自动重发。
+一个IP包除了包含要传输的数据外，还包含源IP地址和目标IP地址，源端口和目标端口。
+端口有什么作用？在两台计算机通信时，只发IP地址是不够的，因为同一台计算机上跑着多个网络程序。一个IP包来了之后，到底是交给浏览器还是QQ，就需要端口号来区分。每个网络程序都向操作系统申请唯一的端口号，这样，两个进程在两台计算机之间建立网络连接就需要各自的IP地址和各自的端口号。
+Socket是网络编程的一个抽象概念。通常我们用一个Socket表示“打开了一个网络链接”，而打开一个Socket需要知道目标计算机的IP地址和端口号，再指定协议类型即可。
+大多数连接都是可靠的TCP连接。创建TCP连接时，主动发起连接的叫客户端，被动响应连接的叫服务器。
+用TCP协议进行Socket编程在Python中十分简单，对于客户端，要主动连接服务器的IP和指定端口，对于服务器，要首先监听指定端口，然后，对每一个新的连接，创建一个线程或进程来处理。通常，服务器程序会无限运行下去。
+同一个端口，被一个Socket绑定了以后，就不能被别的Socket绑定了。
+80.
+UDP的使用与TCP类似，但是不需要建立连接。此外，服务器绑定UDP端口和TCP端口互不冲突，也就是说，UDP的9999端口与TCP的9999端口可以各自绑定。
+81.
+一封电子邮件的旅程就是：
+发件人 -> MUA -> MTA -> MTA -> 若干个MTA -> MDA <- MUA <- 收件人
+有了上述基本概念，要编写程序来发送和接收邮件，本质上就是：
+编写MUA把邮件发到MTA；
+编写MUA从MDA上收邮件。
+发邮件时，MUA和MTA使用的协议就是SMTP：Simple Mail Transfer Protocol，后面的MTA到另一个MTA也是用SMTP协议。
+收邮件时，MUA和MDA使用的协议有两种：POP：Post Office Protocol，目前版本是3，俗称POP3；IMAP：Internet Message Access Protocol，目前版本是4，优点是不但能取邮件，还可以直接操作MDA上存储的邮件，比如从收件箱移到垃圾箱，等等。
+82.
+最早的软件都是运行在大型机上的，软件使用者通过“哑终端”登陆到大型机上去运行软件。后来随着PC机的兴起，软件开始主要运行在桌面上，而数据库这样的软件运行在服务器端，这种Client/Server模式简称CS架构。
+随着互联网的兴起，人们发现，CS架构不适合Web，最大的原因是Web应用程序的修改和升级非常迅速，而CS架构需要每个客户端逐个升级桌面App，因此，Browser/Server模式开始流行，简称BS架构。
+在BS架构下，客户端只需要浏览器，应用程序的逻辑和数据都存储在服务器端。浏览器只需要请求服务器，获取Web页面，并把Web页面展示给用户即可。
+当然，Web页面也具有极强的交互性。由于Web页面是用HTML编写的，而HTML具备超强的表现力，并且，服务器端升级后，客户端无需任何部署就可以使用到新的版本，因此，BS架构迅速流行起来。
+今天，除了重量级的软件如Office，Photoshop等，大部分软件都以Web形式提供。比如，新浪提供的新闻、博客、微博等服务，均是Web应用。
+83.
+HTML是一种用来定义网页的文本，会HTML，就可以编写网页；
+HTTP是在网络上传输HTML的协议，用于浏览器和服务器的通信。
+84.
+了解了HTTP协议和HTML文档，我们其实就明白了一个Web应用的本质就是：
+一.浏览器发送一个HTTP请求；
+二.服务器收到请求，生成一个HTML文档；
+三.服务器把HTML文档作为HTTP响应的Body发送给浏览器；
+四.浏览器收到HTTP响应，从HTTP Body取出HTML文档并显示。
+85.
+底层代码由专门的服务器软件实现，我们用Python专注于生成HTML文档。
+因为我们不希望接触到TCP连接、HTTP原始请求和响应格式，所以，需要一个统一的接口，让我们专心用Python编写Web业务。
+这个接口就是WSGI：Web Server Gateway Interface。
+了解了WSGI框架，我们发现：其实一个Web App，就是写一个WSGI的处理函数，针对每个HTTP请求进行响应。
+86.
+Web框架把我们从WSGI中拯救出来了。现在，我们只需要不断地编写函数，带上URL，就可以继续Web App的开发了。
+使用模板，我们需要预先准备一个HTML文档，这个HTML文档不是普通的HTML，而是嵌入了一些变量和指令，然后，根据我们传入的数据，替换后，得到最终的HTML，发送给用户。
+这就是传说中的MVC：Model-View-Controller，中文名“模型-视图-控制器”。
+Python处理URL的函数就是C：Controller，Controller负责业务逻辑，比如检查用户名是否存在，取出用户信息等等；
+包含变量{{ name }}的模板就是V：View，View负责显示逻辑，通过简单地替换一些变量，View最终输出的就是用户看到的HTML。
+MVC中的Model在哪？Model是用来传给View的，这样View在替换变量的时候，就可以从Model中取出相应的数据。
+87.
+同步IO模型的代码是无法实现异步IO模型的。
+异步IO模型需要一个消息循环，在消息循环中，主线程不断地重复“读取消息-处理消息”这一过程
+88.
+协程看上去也是子程序，但执行过程中，在子程序内部可中断，然后转而执行别的子程序，在适当的时候再返回来接着执行。
+
+
+
+
+
